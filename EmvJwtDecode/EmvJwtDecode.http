@@ -1,0 +1,6 @@
+@EmvJwtDecode_HostAddress = http://localhost:5168
+
+GET {{EmvJwtDecode_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
