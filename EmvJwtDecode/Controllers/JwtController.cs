@@ -11,10 +11,12 @@ namespace EmvJwtDecode.Controllers
     public class JwtController : ControllerBase
     {
         /// <summary>
-        /// Decode a JWT token and return the header and payload
+        /// Decodifica um JWT e retorna o header e o body como um objeto JSON.
         /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
+        /// <param name="request">Objeto contendo o token JWT a ser decodificado.</param>
+        /// <returns>Um objeto JSON contendo o header e o body do JWT.</returns>
+        /// <response code="200">Retorna o header e o body do JWT.</response>
+        /// <response code="400">Se o token JWT estiver faltando ou for inválido.</response>
         [HttpPost("decode")]
         public IActionResult DecodeJwt([FromBody] JwtRequest request)
         {

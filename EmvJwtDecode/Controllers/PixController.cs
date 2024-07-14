@@ -14,11 +14,18 @@ namespace EmvJwtDecode.Controllers
     public class PixController : ControllerBase
     {
         /// <summary>
-        /// Decode a PIX code and return the EMV and JWT data
+        /// Decodifica uma linha Pix Copia-e-Cola e retorna os campos em formato JSON.
         /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
+        /// <param name="request">Objeto contendo a linha Pix Copia-e-Cola a ser decodificada.
+        /// <br>Esta rotina desmembra uma linha Pix Copia-e-cola</br>
+        /// <br>Todas as linhas são compostas por [ID do campo][Tamanho do campo com dois dígitos][Conteúdo do campo] conforme o padrão EMV®1 QRCPS Merchant Presented</br>
+        /// </param>
+        /// <returns>Um objeto JSON contendo os campos decodificados.</returns>
+        /// <response code="200">Retorna os campos decodificados.</response>
+        /// <response code="400">Se a linha Pix estiver faltando ou for inválida.</response>
         [HttpPost]
+        [ProducesResponseType(typeof(Dictionary<string, object>), 200)]
+        [ProducesResponseType(400)]
         public async Task<IActionResult> DecodePix([FromBody] PixRequest request)
         {
             //var emv = DecodeEmv(request.PixCopiaCola);
@@ -165,6 +172,12 @@ namespace EmvJwtDecode.Controllers
             }
         }
 
+        /// <summary>
+        /// Decodifica uma linha Pix Copia-e-Cola.
+        /// </summary>
+        /// <param name="brcode">A linha Pix Copia-e-Cola a ser decodificada.</param>
+        /// <param name="recursivamente">Se deve decodificar recursivamente os campos.</param>
+        /// <returns>Um dicionário contendo os campos decodificados.</returns>
         public static Dictionary<string, object> DecodeBrcode(string brcode, bool recursivamente = true)
         {
             int n = 0;
@@ -214,11 +227,12 @@ namespace EmvJwtDecode.Controllers
 
             return retorno;
         }
-    
+
 
         /// <summary>
-        /// Pix request model
+        /// A linha Pix Copia-e-Cola a ser decodificada.
         /// </summary>
+        /// <example>00020126580014br.gov.bcb.pix01140123456789052040000530398654041.235802BR5913Fulano de Tal6008Brasilia62070503***63041D3D</example>
         public class PixRequest
         {
             public string PixCopiaCola { get; set; }
