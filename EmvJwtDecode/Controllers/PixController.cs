@@ -180,6 +180,9 @@ namespace EmvJwtDecode.Controllers
         /// <returns>Um dicionário contendo os campos decodificados.</returns>
         public static Dictionary<string, object> DecodeBrcode(string brcode, bool recursivamente = true)
         {
+            //if (string.IsNullOrEmpty(brcode)) throw new ArgumentNullException(nameof(brcode));
+            if (brcode == string.Empty) return new Dictionary<string, object>();
+
             int n = 0;
             var retorno = new Dictionary<string, object>();
 
@@ -192,7 +195,7 @@ namespace EmvJwtDecode.Controllers
 
                 while (n < brcode.Length)
                 {
-                    if (n + 4 > brcode.Length) break; // Verificar se há pelo menos 4 caracteres restantes
+                    if (n + 4 > brcode.Length) return null; // Verificar se há pelo menos 4 caracteres restantes
                     string codigo = brcode.Substring(n, 2);
                     n += 2;
                     if (!int.TryParse(brcode.Substring(n, 2), out int tamanho))
@@ -200,7 +203,7 @@ namespace EmvJwtDecode.Controllers
                         return null;
                     }
                     n += 2;
-                    if (n + tamanho > brcode.Length) break; // Verificar se o comprimento especificado está dentro dos limites
+                    if (n + tamanho > brcode.Length) return null; // Verificar se o comprimento especificado está dentro dos limites
                     string valor = brcode.Substring(n, tamanho);
                     Console.WriteLine($"Cod: {codigo} T: {tamanho} Data: {valor}");
                     n += tamanho;
@@ -221,7 +224,6 @@ namespace EmvJwtDecode.Controllers
             }
             catch (Exception ex)
             {
-
                 throw ex;
             }
 
